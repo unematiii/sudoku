@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "sourceMap": true,
+        "module": "commonjs",
+        "target": "ES5",
+        "jsx": "react",
+        "downlevelIteration": true,
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+    },
+    "include": [
+        "src/**/*",
+        "node_modules/@spielhalle/sudoku/src/constants",
+        "node_modules/@spielhalle/sudoku/src/validate",
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ],
+}

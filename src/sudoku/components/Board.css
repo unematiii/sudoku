@@ -1,0 +1,25 @@
+@value v-maxWidth: 550px;
+@value v-minWidth: 250px;
+@value v-menuOffset: 70px;
+
+.board {
+    max-width: min(v-maxWidth, max(v-minWidth, calc(100vh - v-menuOffset)));
+    min-width: v-minWidth;
+    margin: 0 auto;
+    position: relative;
+}
+
+.board:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+
+.grid {
+    display: flex;
+    flex-flow: row wrap;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
