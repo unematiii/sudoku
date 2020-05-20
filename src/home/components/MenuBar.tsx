@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Dropdown, Icon, Menu } from "semantic-ui-react";
 import { useDispatch } from "react-redux";
 
-import { createNewGame, solveCurrentGame } from "../../sudoku";
+import { createNewGame, solveCurrentGame, selectIsGameUnsolvable } from "../../sudoku";
 import { selectIsValidBoard } from "../../sudoku";
 import { useTypedSelector } from "../../core";
 
@@ -12,6 +12,8 @@ import styles from "./MenuBar.css";
 export const MenuBar = () => {
     const dispatch = useDispatch();
     const isBoardValid = useTypedSelector(selectIsValidBoard);
+    const isGameUnsolvable = useTypedSelector(selectIsGameUnsolvable);
+    const canTryResolve = isBoardValid && !isGameUnsolvable;
 
     const onClickNewGame = () => dispatch(createNewGame());
     const onClickSolveGame = () => dispatch(solveCurrentGame());
@@ -29,7 +31,10 @@ export const MenuBar = () => {
                             <Dropdown.Item onClick={onClickNewGame}>
                                 <Icon name='redo' />New Game
                             </Dropdown.Item>
-                            <Dropdown.Item disabled={!isBoardValid} onClick={onClickSolveGame}>
+                            <Dropdown.Item 
+                                disabled={!canTryResolve} 
+                                onClick={onClickSolveGame}
+                            >
                                 <Icon name='pencil' />Solve Current
                             </Dropdown.Item>
                         </Dropdown.Menu>

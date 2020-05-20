@@ -11,12 +11,12 @@ export const ErrorDialog = () => {
 
     useEffect(() => {
         setIsOpen(open);
-    }, [open])
+    }, [open]);
 
     const closeDialog = () => setIsOpen(false);
 
     return (
-        <Modal basic size='small' open={isOpen}>
+        <Modal basic size='small' open={isOpen} key={Math.random()}>
             <Header textAlign='center'>
                 <Icon name='close' />This game is unsolvable!
             </Header>

@@ -134,6 +134,7 @@ export function gameReducer(state = initialState, action: GameAction): GameState
                 return {
                     ...state,
                     board: newBoard,
+                    isSolvable: true,
                 };
             }
         case SOLVE_CURRENT_GAME: 
