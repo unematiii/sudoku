@@ -3,6 +3,7 @@ export type ActiveCell = [number, number];
 export interface BoardCell {
     isActive: boolean;
     isEditable: boolean;
+    isHighlighted: boolean;
     isValid: boolean;
     value: number;
 }

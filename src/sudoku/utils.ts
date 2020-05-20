@@ -29,6 +29,24 @@ export const isValidBoard = (board: GameBoard) =>
 export const isCellValid = (board: GameBoard,  column: number, row: number) => 
     isValid(board, row, column, boardSize, boxSize);
 
+export const shouldHighlightCell = (
+    activeCellcolumn: number,
+    activeCellrow: number,
+    cellColumn: number,
+    cellRow: number,
+) => {
+    const subsectionRowStart: number = Math.floor(activeCellrow / boxSize) * boxSize;
+    const subsectionRowEnd: number = subsectionRowStart + boxSize;
+
+    const subsectionColumnStart: number = Math.floor(activeCellcolumn / boxSize) * boxSize;
+    const subsectionColumnEnd: number = subsectionColumnStart + boxSize;
+    
+    return cellColumn === activeCellcolumn ||
+        cellRow === activeCellrow ||
+        ( cellColumn >= subsectionColumnStart&& cellColumn < subsectionColumnEnd  && 
+            cellRow >= subsectionRowStart && cellRow < subsectionRowEnd);
+}
+
 export const sanitizeInput = (input: string) => {
     const value = Number(input);
     return Number.isInteger(value) && value >= 1 && value <= 9 ? value : 0;

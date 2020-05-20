@@ -1,7 +1,8 @@
 @value v-boxBorder: 3px;
-@value v-activeInputColor: #cadffa;
-@value v-inputHoverColor: #e3ebf5;
+@value v-activeInputColor: #bbdefb;
+@value v-inputHoverColor: #cadffa;
 @value v-invalidInputColor: red;
+@value v-predefinedInputColor: #ececec;
 
 .tile {
     display: flex;
@@ -77,10 +78,6 @@
     cursor: default;
 }
 
-.tile:not(.active) input:hover {
-    background-color: v-inputHoverColor;
-}
-
 .tile.active input {
     background-color: v-activeInputColor;
 }
@@ -91,5 +88,10 @@
 }
 
 .tile:not(.active).predefined input {
-    background-color: #ececec;
+    background-color: v-predefinedInputColor;
+}
+
+.tile:not(.active) input:hover,
+.tile:not(.active).highlighted input {
+    background-color: v-inputHoverColor !important;
 }

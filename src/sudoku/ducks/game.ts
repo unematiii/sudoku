@@ -7,6 +7,7 @@ import {
     isValidBoard,
     loadGame,
     saveGame,
+    shouldHighlightCell,
     solveGame,
 } from "../utils";
 import { RootState } from "../../core";
@@ -191,10 +192,16 @@ export const selectIsValidBoard = (state: RootState): boolean =>
 export const selectIsGameUnsolvable = (state: RootState): boolean =>
     !selectGameState(state).isSolvable;
 
+export const selectIsCellHighlighted = (column: number, row: number) => (state: RootState): boolean => {
+    const activeCell = selectActiveCell(state);
+    return activeCell !== null && shouldHighlightCell(activeCell[0], activeCell[1], column, row);
+}
+
 export const makeCellStateSelector = (column: number, row: number) =>
     createStructuredSelector<RootState, BoardCell>({
         isActive: selectIsActiveCell(column, row),
         isEditable: selectIsEditable(column, row),
+        isHighlighted: selectIsCellHighlighted(column, row),
         isValid: selectIsValidCell(column, row),
         value: selectCellValue(column, row),
     });
