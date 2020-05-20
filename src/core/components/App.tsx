@@ -1,6 +1,6 @@
+import React from "react";
 import { createStore, StoreEnhancer } from "redux";
 import { Provider } from "react-redux";
-import React from "react";
 
 import { Home } from "./../../home";
 import { rootReducer } from "../rootReducer";
@@ -16,7 +16,8 @@ const store = createStore(
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
-export const App = () =>
+export const App = () => (
     <Provider store={store}>
         <Home/>
-    </Provider>;
+    </Provider>
+);

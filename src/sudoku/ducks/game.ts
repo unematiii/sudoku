@@ -1,7 +1,14 @@
 import { createStructuredSelector } from "reselect";
 
 import { ActiveCell, BoardCell, BoardState, GameBoard } from "../types";
-import { createGame, isCellValid, loadGame, sanitizeInput, saveGame, solveGame, isValidBoard } from "../utils";
+import {
+    createGame,
+    isCellValid,
+    isValidBoard,
+    loadGame,
+    saveGame,
+    solveGame,
+} from "../utils";
 import { RootState } from "../../core";
 
 const CREATE_NEW_GAME = 'CREATE_NEW_GAME';
@@ -45,11 +52,11 @@ interface SetCellValueAction {
     payload: {
         column: number;
         row: number;
-        value: string;
+        value: number;
     };
 }
 
-export function setCellValue(column: number, row: number, value: string): SetCellValueAction {
+export function setCellValue(column: number, row: number, value: number): SetCellValueAction {
     return {
         type: SET_CELL_VALUE,
         payload: {
@@ -72,11 +79,13 @@ export function solveCurrentGame(): SolveCurrentGameAction {
 
 interface GameState extends BoardState {
     activeCell: null | ActiveCell;
+    isSolvable: boolean;
 }
 
 const initialBoard = loadGame() || createGame();
 const initialState: GameState = {
     activeCell: null,
+    isSolvable: true,
     ...initialBoard,
 };
 
@@ -91,7 +100,7 @@ export function gameReducer(state = initialState, action: GameAction): GameState
     switch (action.type) {
         case CREATE_NEW_GAME:
             return {
-                activeCell: null,
+                ...initialState,
                 ...createGame(),
             };
         case SET_ACTIVE_CELL:
@@ -109,10 +118,9 @@ export function gameReducer(state = initialState, action: GameAction): GameState
                 const { board, originalBoard } = state;
                 const { column, row, value } = action.payload;
 
-                const newValue = sanitizeInput(value);
                 const newRow = [
                     ...board[row].slice(0, column),
-                    newValue,
+                    value,
                     ...board[row].slice(column + 1)
                 ];
                 const newBoard = [
@@ -131,13 +139,16 @@ export function gameReducer(state = initialState, action: GameAction): GameState
         case SOLVE_CURRENT_GAME: 
             {
                 const { board, originalBoard } = state;
-                const newBoard = solveGame(board);
-
-                saveGame({ board: newBoard, originalBoard })
+                const solution = solveGame(board);
+                
+                if (solution) {
+                    saveGame({ board: solution, originalBoard });
+                }
 
                 return {
                     ...state,
-                    board: newBoard,
+                    board: solution || board,
+                    isSolvable: !!solution,
                 };
             }
         default:
@@ -175,6 +186,9 @@ const selectIsValidCell = (column: number, row: number) => (state: RootState): b
 
 export const selectIsValidBoard = (state: RootState): boolean =>
     isValidBoard(selectBoard(state));
+
+export const selectIsGameUnsolvable = (state: RootState): boolean =>
+    !selectGameState(state).isSolvable;
 
 export const makeCellStateSelector = (column: number, row: number) =>
     createStructuredSelector<RootState, BoardCell>({

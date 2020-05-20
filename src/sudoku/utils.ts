@@ -18,8 +18,10 @@ export const createGame: () => BoardState = () => {
     return state;
 }
 
-export const solveGame = (board: GameBoard) =>
-    cloneDeep(solve(board, boardSize, boxSize)[0]);
+export const solveGame = (board: GameBoard) => {
+    const solutions = solve(board, boardSize, boxSize);
+    return solutions.length && cloneDeep(solutions[0]) || false;
+}
 
 export const isValidBoard = (board: GameBoard) =>
     isValidField(board, boardSize, boxSize);

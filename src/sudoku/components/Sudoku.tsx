@@ -1,5 +1,5 @@
-import { Container } from "semantic-ui-react";
 import React, { forwardRef, Ref, useMemo } from "react";
+import { Container } from "semantic-ui-react";
 
 import { boardSize, boardStartIndex } from "../consts";
 import { Tile } from "./Tile";
@@ -24,13 +24,15 @@ interface SudokuBoardProps {
 
 const SudokuBoard: React.FC<SudokuBoardProps> = forwardRef((props, ref: Ref<HTMLDivElement>) => {
     const board = useMemo(() => createGrid(boardSize), []);
-    return <Container>
-        <div className={styles.board} ref={ref} {...props}>
-            <div className={styles.grid}>
-                {board}
+    return (
+        <Container>
+            <div className={styles.board} ref={ref} {...props}>
+                <div className={styles.grid}>
+                    {board}
+                </div>
             </div>
-        </div>
-    </Container>;
+        </Container>
+    );
 });
 
 export const Sudoku = withDynamicFontSize(SudokuBoard);
