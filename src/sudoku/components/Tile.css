@@ -1,4 +1,7 @@
 @value v-boxBorder: 3px;
+@value v-activeInputColor: #cadffa;
+@value v-inputHoverColor: #e3ebf5;
+@value v-invalidInputColor: red;
 
 .tile {
     display: flex;
@@ -40,11 +43,53 @@
     background-image: none;
     background-color: transparent;
     box-shadow: none;
+    /* caret-color: transparent; */
+    margin: 0;
     text-align: center;
     font-size: 1em;
     line-height: 1em;
+    -moz-appearance: textfield;
+}
+
+.tile input::-webkit-outer-spin-button,
+.tile input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.tile input,
+.tile input:disabled {
+    color: black;
+    -webkit-text-fill-color: black;
+    opacity: 1
+}
+
+.tile input:active,
+.tile.input:focus {
+    cursor: none;
 }
 
 .tile input:focus {
     outline: none;
+}
+
+.tile input,
+.tile input:disabled {
+    cursor: default;
+}
+
+.tile:not(.active) input:hover {
+    background-color: v-inputHoverColor;
+}
+
+.tile.active input {
+    background-color: v-activeInputColor;
+}
+
+.tile.invalid input {
+   color: v-invalidInputColor;
+   -webkit-text-fill-color: v-invalidInputColor;
+}
+
+.tile:not(.active).predefined input {
+    background-color: #ececec;
 }
