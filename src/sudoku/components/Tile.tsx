@@ -46,9 +46,7 @@ export const Tile: React.FC<TileProps> = ({ column, row }) => {
 
     const onFocus = () => dispatch(setActiveCell(column, row));
     const onBlur = () => dispatch(clearActiveCell());
-
-    console.log('Remder', column, row);
-
+    
     return (
         <div className={cn} onClick={onClick}>
             <input
