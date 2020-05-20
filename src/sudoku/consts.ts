@@ -4,4 +4,4 @@ export const boardRetainPercentage = 0.75;
 export const boardStartIndex = BOARD_START_IDX;
 export const boardSize = 9;
 export const boxSize = 3;
-export const localStorageKey = 'sudoku';
+export const localStorageKey = 'sudoku/board';
