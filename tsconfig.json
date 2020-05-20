@@ -13,6 +13,7 @@
     "include": [
         "src/**/*",
         "node_modules/@spielhalle/sudoku/src/constants",
+        "node_modules/@spielhalle/sudoku/src/coverboard/solve",
         "node_modules/@spielhalle/sudoku/src/validate",
     ],
     "exclude": [

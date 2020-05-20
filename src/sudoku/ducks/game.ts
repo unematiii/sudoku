@@ -1,23 +1,22 @@
 import { createStructuredSelector } from "reselect";
 
 import { ActiveCell, BoardCell, BoardState, GameBoard } from "../types";
-import { createGame, isCellValid, loadGame, sanitizeInput, saveGame } from "../utils";
+import { createGame, isCellValid, loadGame, sanitizeInput, saveGame, solveGame, isValidBoard } from "../utils";
 import { RootState } from "../../core";
 
 const CREATE_NEW_GAME = 'CREATE_NEW_GAME';
 const SET_ACTIVE_CELL = 'SET_ACTIVE_CELL';
 const CLEAR_ACTIVE_CELL = 'CLEAR_ACTIVE_CELL';
 const SET_CELL_VALUE = 'SET_CELL_VALUE';
+const SOLVE_CURRENT_GAME = 'SOLVE_CURRENT_GAME';
 
 interface CreateNewGameAction {
     type: typeof CREATE_NEW_GAME;
-    payload: GameBoard;
 }
 
-export function createNewGame(board: GameBoard): CreateNewGameAction {
+export function createNewGame(): CreateNewGameAction {
     return {
         type: CREATE_NEW_GAME,
-        payload: board,
     };
 }
 
@@ -61,6 +60,16 @@ export function setCellValue(column: number, row: number, value: string): SetCel
     };
 }
 
+interface SolveCurrentGameAction {
+    type: typeof SOLVE_CURRENT_GAME;
+}
+
+export function solveCurrentGame(): SolveCurrentGameAction {
+    return {
+        type: SOLVE_CURRENT_GAME,
+    };
+}
+
 interface GameState extends BoardState {
     activeCell: null | ActiveCell;
 }
@@ -75,18 +84,16 @@ type GameAction =
     CreateNewGameAction |
     SetActiveCellAction |
     ClearActiveCellAction |
-    SetCellValueAction;
+    SetCellValueAction |
+    SolveCurrentGameAction;
 
 export function gameReducer(state = initialState, action: GameAction): GameState {
     switch (action.type) {
         case CREATE_NEW_GAME:
-            {
-                const boardState = createGame();
-                return {
-                    ...state,
-                    ...boardState,
-                };
-            }
+            return {
+                activeCell: null,
+                ...createGame(),
+            };
         case SET_ACTIVE_CELL:
             return {
                 ...state,
@@ -121,47 +128,53 @@ export function gameReducer(state = initialState, action: GameAction): GameState
                     board: newBoard,
                 };
             }
+        case SOLVE_CURRENT_GAME: 
+            {
+                const { board, originalBoard } = state;
+                const newBoard = solveGame(board);
+
+                saveGame({ board: newBoard, originalBoard })
+
+                return {
+                    ...state,
+                    board: newBoard,
+                };
+            }
         default:
             return state;
     }
 }
 
-function selectGameState(state: RootState): GameState {
-    return state.game;
-}
+const selectGameState = (state: RootState): GameState => state.game;
 
-function selectBoard(state: RootState): GameBoard {
-    return selectGameState(state).board;
-}
+const selectBoard = (state: RootState): GameBoard =>
+    selectGameState(state).board;
 
-function selectOriginalBoard(state: RootState): GameBoard {
-    return selectGameState(state).originalBoard;
-}
+const selectOriginalBoard = (state: RootState): GameBoard =>
+    selectGameState(state).originalBoard;
 
-function selectActiveCell(state: RootState): ActiveCell | null {
-    return selectGameState(state).activeCell;
-}
+const selectActiveCell = (state: RootState): ActiveCell | null =>
+    selectGameState(state).activeCell;
 
 const selectIsActiveCell = (column: number, row: number) => (state: RootState): boolean => {
     const activeCell = selectActiveCell(state);
     return activeCell ? activeCell[0] === column && activeCell[1] === row : false;
 }
 
-const selectCellValue = (column: number, row: number) => (state: RootState): number => {
-    return selectBoard(state)[row][column];
-}
+const selectCellValue = (column: number, row: number) => (state: RootState): number =>
+    selectBoard(state)[row][column];
 
-const selectOriginalCellValue = (column: number, row: number) => (state: RootState): number => {
-    return selectOriginalBoard(state)[row][column];
-}
+const selectOriginalCellValue = (column: number, row: number) => (state: RootState): number =>
+    selectOriginalBoard(state)[row][column];
 
-const selectIsEditable = (column: number, row: number) => (state: RootState): boolean => {
-    return selectOriginalCellValue(column, row)(state) === 0
-}
+const selectIsEditable = (column: number, row: number) => (state: RootState): boolean => 
+    selectOriginalCellValue(column, row)(state) === 0;
 
-const selectIsValidCell = (column: number, row: number) => (state: RootState): boolean => {
-    return isCellValid(selectBoard(state), column, row);
-}
+const selectIsValidCell = (column: number, row: number) => (state: RootState): boolean =>
+    isCellValid(selectBoard(state), column, row);
+
+export const selectIsValidBoard = (state: RootState): boolean =>
+    isValidBoard(selectBoard(state));
 
 export const makeCellStateSelector = (column: number, row: number) =>
     createStructuredSelector<RootState, BoardCell>({

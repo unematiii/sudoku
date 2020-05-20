@@ -1,2 +1,2 @@
 export { App } from "./components/App";
-export { RootState } from "./rootReducer";
+export { RootState, useTypedSelector } from "./rootReducer";

@@ -9,7 +9,7 @@ import {
     setActiveCell,
     setCellValue,
 } from "../ducks/game";
-import { useTypedSelector } from "../../core/rootReducer";
+import { useTypedSelector } from "../../core";
 
 import styles from "./Tile.css";
 
@@ -21,7 +21,7 @@ interface TileProps {
 
 export const Tile: React.FC<TileProps> = ({ column, row }) => {
     const selectCellState = useMemo(() => makeCellStateSelector(column, row), []);
-    const cellState = useTypedSelector((state) => selectCellState(state));
+    const cellState = useTypedSelector(selectCellState);
 
     const { isActive, isEditable, isValid, value } = cellState;
 
@@ -38,21 +38,12 @@ export const Tile: React.FC<TileProps> = ({ column, row }) => {
 
     const dispatch = useDispatch();
 
-    const onClick = () => {
-        dispatch(setActiveCell(column, row));
-    };
-
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onClick = () => dispatch(setActiveCell(column, row));
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
         dispatch(setCellValue(column, row, e.target.value.slice(-1)));
-    };
 
-    const onFocus = () => {
-        dispatch(setActiveCell(column, row));
-    };
-
-    const onBlur = () => {
-        dispatch(clearActiveCell());
-    };
+    const onFocus = () => dispatch(setActiveCell(column, row));
+    const onBlur = () => dispatch(clearActiveCell());
 
     return <div className={cn} onClick={onClick}>
         <input

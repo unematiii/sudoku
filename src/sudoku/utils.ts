@@ -1,6 +1,7 @@
 import { cloneDeep } from "lodash-es";
 import { createSudokuBoard } from "@spielhalle/sudoku";
-import { isValid } from "@spielhalle/sudoku/src/validate";
+import { isValid, isValidField } from "@spielhalle/sudoku/src/validate";
+import { solve } from "@spielhalle/sudoku/src/coverboard/solve";
 
 import { boardRetainPercentage, boardSize, boxSize, localStorageKey } from "./consts";
 import { BoardState, GameBoard } from "./types";
@@ -16,6 +17,12 @@ export const createGame: () => BoardState = () => {
     saveGame(state);
     return state;
 }
+
+export const solveGame = (board: GameBoard) =>
+    cloneDeep(solve(board, boardSize, boxSize)[0]);
+
+export const isValidBoard = (board: GameBoard) =>
+    isValidField(board, boardSize, boxSize);
 
 export const isCellValid = (board: GameBoard,  column: number, row: number) => 
     isValid(board, row, column, boardSize, boxSize);
