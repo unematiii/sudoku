@@ -1,3 +1,7 @@
+
+/**
+ * [column, row]
+ */
 export type ActiveCell = [number, number];
 
 export interface BoardCell {
@@ -9,9 +13,16 @@ export interface BoardCell {
     value: number;
 }
 
+/**
+ * [column, row, preValue]
+ */
+export type GameHistoryEntry = [number, number, number];
+export type GameHistory = GameHistoryEntry[]; 
+
 export interface GameState {
     activeCell: null | ActiveCell;
     board: GameBoard;
+    history: GameHistory;
     isAutoSolved: boolean,
     isSolvable: boolean;
     originalBoard: GameBoard;

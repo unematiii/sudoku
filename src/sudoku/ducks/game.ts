@@ -1,3 +1,4 @@
+import { cloneDeep } from "lodash-es";
 import { createStructuredSelector } from "reselect";
 
 import { ActiveCell, BoardCell, GameBoard, GameState } from "../types";
@@ -10,14 +11,17 @@ import {
     saveGame,
     shouldHighlightCell,
     solveGame,
+    updateBoard,
 } from "../utils";
 import { RootState } from "../../core";
 
-export const CREATE_NEW_GAME = 'CREATE_NEW_GAME';
-export const SET_CELL_VALUE = 'SET_CELL_VALUE';
-export const SOLVE_CURRENT_GAME = 'SOLVE_CURRENT_GAME';
+const CREATE_NEW_GAME = 'CREATE_NEW_GAME';
+const SET_CELL_VALUE = 'SET_CELL_VALUE';
+const SOLVE_CURRENT_GAME = 'SOLVE_CURRENT_GAME';
 const SET_ACTIVE_CELL = 'SET_ACTIVE_CELL';
 const CLEAR_ACTIVE_CELL = 'CLEAR_ACTIVE_CELL';
+const UNDO_ACTION = 'UNDO_ACTION';
+const UNDO_ALL_ACTIONS = 'UNDO_ALL_ACTIONS';
 
 interface CreateNewGameAction {
     type: typeof CREATE_NEW_GAME;
@@ -79,6 +83,27 @@ export function solveCurrentGame(): SolveCurrentGameAction {
     };
 }
 
+interface UndoAction {
+    type: typeof UNDO_ACTION;
+}
+
+export function undoAction(): UndoAction {
+    return {
+        type: UNDO_ACTION,
+    };
+}
+
+interface UndoAllAction {
+    type: typeof UNDO_ALL_ACTIONS;
+}
+
+export function undoAllActions(): UndoAllAction {
+    return {
+        type: UNDO_ALL_ACTIONS,
+    };
+}
+
+
 const initialState: GameState = {
     ... (loadGame() || saveGame(createGame()))
 };
@@ -88,7 +113,9 @@ export type GameAction =
     SetActiveCellAction |
     ClearActiveCellAction |
     SetCellValueAction |
-    SolveCurrentGameAction;
+    SolveCurrentGameAction |
+    UndoAllAction |
+    UndoAction;
 
 export function gameReducer(state = initialState, action: GameAction): GameState {
     switch (action.type) {
@@ -96,39 +123,36 @@ export function gameReducer(state = initialState, action: GameAction): GameState
             return {
                 ...createGame(),
             };
+
         case SET_ACTIVE_CELL:
             return {
                 ...state,
                 activeCell: action.payload,
             };
+
         case CLEAR_ACTIVE_CELL:
             return {
                 ...state,
                 activeCell: null,
             };
+
         case SET_CELL_VALUE:
             {
-                const { board } = state;
+                const { board, history } = state;
                 const { column, row, value } = action.payload;
 
-                const newRow = [
-                    ...board[row].slice(0, column),
-                    value,
-                    ...board[row].slice(column + 1)
-                ];
-                const newBoard = [
-                    ...board.slice(0, row),
-                    newRow,
-                    ...board.slice(row + 1),
-                ];
+                const prevValue = board[row][column];
+                const newBoard = updateBoard(board, column, row, value);
 
                 return {
                     ...state,
                     board: newBoard,
+                    history: [...history, [column, row, prevValue]],
                     isAutoSolved: false,
                     isSolvable: true,
                 };
             }
+
         case SOLVE_CURRENT_GAME: 
             {
                 const { board } = state;
@@ -141,6 +165,41 @@ export function gameReducer(state = initialState, action: GameAction): GameState
                     isSolvable: !!solution,
                 };
             }
+
+        case UNDO_ACTION: 
+            {
+                const { board, history } = state;
+
+                const cell = history.pop();
+                if (cell) {
+                    const [column, row, value] = cell;
+                    const newBoard = updateBoard(board, column, row, value);
+    
+                    return {
+                        ...state,
+                        board: newBoard,
+                        history: [...history],
+                        isAutoSolved: false,
+                        isSolvable: true,
+                    };
+                }
+
+                return state;
+            }
+
+        case UNDO_ALL_ACTIONS: {
+            {
+                const { originalBoard} = state;
+                return {
+                    ...state,
+                    board: cloneDeep(originalBoard),
+                    history: [],
+                    isAutoSolved: false,
+                    isSolvable: true,
+                };
+            }
+        }
+        
         default:
             return state;
     }
@@ -199,6 +258,9 @@ export const selectIsValueHighlighted = (column: number, row: number) => (state:
     const activeCellValue = selectCellValue(activeCell[0], activeCell[1])(state);
     return activeCellValue > 0 && selectCellValue(column, row)(state) === activeCellValue;
 }
+
+export const selectCanUndo = (state: RootState): boolean =>
+    !!selectGameState(state).history.length;
 
 export const makeCellStateSelector = (column: number, row: number) =>
     createStructuredSelector<RootState, BoardCell>({

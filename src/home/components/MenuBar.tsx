@@ -2,7 +2,14 @@ import React from "react";
 import { Container, Dropdown, Icon, Menu } from "semantic-ui-react";
 import { useDispatch } from "react-redux";
 
-import { createNewGame, solveCurrentGame, selectIsGameUnsolvable } from "../../sudoku";
+import {
+    createNewGame,
+    selectCanUndo,
+    selectIsGameUnsolvable,
+    solveCurrentGame,
+    undoAction,
+    undoAllActions,
+} from "../../sudoku";
 import { selectIsValidBoard } from "../../sudoku";
 import { useTypedSelector } from "../../core";
 
@@ -11,12 +18,15 @@ import styles from "./MenuBar.css";
 
 export const MenuBar = () => {
     const dispatch = useDispatch();
+    const canUndo = useTypedSelector(selectCanUndo);
     const isBoardValid = useTypedSelector(selectIsValidBoard);
     const isGameUnsolvable = useTypedSelector(selectIsGameUnsolvable);
-    const canTryResolve = isBoardValid && !isGameUnsolvable;
+    const canTryReSolve = isBoardValid && !isGameUnsolvable;
 
     const onClickNewGame = () => dispatch(createNewGame());
     const onClickSolveGame = () => dispatch(solveCurrentGame());
+    const onClickUndo = () => dispatch(undoAction());
+    const onClickUndoAll = () => dispatch(undoAllActions());
 
     return (
         <Container className={styles.container}>
@@ -31,11 +41,15 @@ export const MenuBar = () => {
                             <Dropdown.Item onClick={onClickNewGame}>
                                 <Icon name='pencil' />New Game
                             </Dropdown.Item>
-                            <Dropdown.Item 
-                                disabled={!canTryResolve} 
-                                onClick={onClickSolveGame}
-                            >
+                            <Dropdown.Item disabled={!canTryReSolve} onClick={onClickSolveGame}>
                                 <Icon name='flag' />Solve Current
+                            </Dropdown.Item>
+                            <Dropdown.Divider />
+                            <Dropdown.Item disabled={!canUndo} onClick={onClickUndoAll}>
+                                <Icon name='redo' />Start Over
+                            </Dropdown.Item>
+                            <Dropdown.Item disabled={!canUndo} onClick={onClickUndo}>
+                                <Icon name='undo' />Undo
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>

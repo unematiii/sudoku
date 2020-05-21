@@ -14,10 +14,11 @@ import { GameBoard, GameState } from "./types";
 
 const createBoard = () => createSudokuBoard(boardSize, boardRetainPercentage);
 
-export const createGame = () => {
+export const createGame: () => GameState =  () => {
     const board = createBoard();
     return {
         activeCell: null,
+        history: [],
         isAutoSolved: false,
         isSolvable: true,
         board: cloneDeep(board),
@@ -47,17 +48,30 @@ export const isValidBoard = (board: GameBoard) =>
 export const isCellValid = (board: GameBoard,  column: number, row: number) => 
     isValid(board, row, column, boardSize, boxSize);
 
+export const updateBoard = (board: GameBoard, column: number, row: number, value: number): GameBoard => {
+    const newRow = [
+        ...board[row].slice(0, column),
+        value,
+        ...board[row].slice(column + 1)
+    ];
+    return [
+        ...board.slice(0, row),
+        newRow,
+        ...board.slice(row + 1),
+    ];
+}
+
 export const shouldHighlightCell = (
     activeCellcolumn: number,
     activeCellrow: number,
     cellColumn: number,
     cellRow: number,
 ) => {
-    const subsectionRowStart: number = Math.floor(activeCellrow / boxSize) * boxSize;
-    const subsectionRowEnd: number = subsectionRowStart + boxSize;
+    const subsectionRowStart = Math.floor(activeCellrow / boxSize) * boxSize;
+    const subsectionRowEnd = subsectionRowStart + boxSize;
 
-    const subsectionColumnStart: number = Math.floor(activeCellcolumn / boxSize) * boxSize;
-    const subsectionColumnEnd: number = subsectionColumnStart + boxSize;
+    const subsectionColumnStart = Math.floor(activeCellcolumn / boxSize) * boxSize;
+    const subsectionColumnEnd = subsectionColumnStart + boxSize;
     
     return cellColumn === activeCellcolumn ||
         cellRow === activeCellrow ||
