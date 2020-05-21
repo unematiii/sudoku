@@ -1,12 +1,12 @@
 import React from "react";
 
-import { ErrorDialog } from "./ErrorDialog";
 import { MenuBar } from "./MenuBar";
+import { MessageDialog } from "./MessageDialog"
 import { Sudoku } from "../../sudoku";
 
 export const Home = () => 
     <>
         <MenuBar />
         <Sudoku />
-        <ErrorDialog />
+        <MessageDialog />
     </>;

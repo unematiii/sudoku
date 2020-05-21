@@ -3,7 +3,13 @@ import { createSudokuBoard } from "@spielhalle/sudoku";
 import { isValid, isValidField } from "@spielhalle/sudoku/src/validate";
 import { solve } from "@spielhalle/sudoku/src/coverboard/solve";
 
-import { boardRetainPercentage, boardSize, boxSize, localStorageKey } from "./consts";
+import {
+    boardRetainPercentage,
+    boardSize,
+    boxSize,
+    boardStartIndex,
+    localStorageKey,
+} from "./consts";
 import { BoardState, GameBoard } from "./types";
 
 const createBoard = () => createSudokuBoard(boardSize, boardRetainPercentage);
@@ -20,6 +26,17 @@ export const createGame: () => BoardState = () => {
 export const solveGame = (board: GameBoard) => {
     const solutions = solve(board, boardSize, boxSize);
     return solutions.length && cloneDeep(solutions[0]) || false;
+}
+
+export const isGameSolved = (board: GameBoard) => {
+    for(let i = boardStartIndex; i < boardSize; i++) {
+        for(let j = boardStartIndex; j < boardSize; j++) {
+            if(board[j][i] === 0) {
+                return false;
+            }
+        }
+    }
+    return isValidBoard(board);
 }
 
 export const isValidBoard = (board: GameBoard) =>

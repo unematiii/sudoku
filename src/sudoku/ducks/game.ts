@@ -4,6 +4,7 @@ import { ActiveCell, BoardCell, BoardState, GameBoard } from "../types";
 import {
     createGame,
     isCellValid,
+    isGameSolved,
     isValidBoard,
     loadGame,
     shouldHighlightCell,
@@ -184,6 +185,9 @@ export const selectIsValidBoard = (state: RootState): boolean =>
 
 export const selectIsGameUnsolvable = (state: RootState): boolean =>
     !selectGameState(state).isSolvable;
+
+export const selectIsGameSolved = (state: RootState): boolean =>
+    isGameSolved(selectBoard(state));
 
 export const selectIsCellHighlighted = (column: number, row: number) => (state: RootState): boolean => {
     const activeCell = selectActiveCell(state);
