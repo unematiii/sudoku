@@ -29,13 +29,13 @@ export const MenuBar = () => {
                     <Dropdown text='GAME' pointing='top right' className='link item'>
                         <Dropdown.Menu>
                             <Dropdown.Item onClick={onClickNewGame}>
-                                <Icon name='redo' />New Game
+                                <Icon name='pencil' />New Game
                             </Dropdown.Item>
                             <Dropdown.Item 
                                 disabled={!canTryResolve} 
                                 onClick={onClickSolveGame}
                             >
-                                <Icon name='pencil' />Solve Current
+                                <Icon name='flag' />Solve Current
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>

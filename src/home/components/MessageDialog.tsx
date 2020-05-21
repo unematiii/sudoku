@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button, Header, Icon, Modal } from "semantic-ui-react";
-import { selectIsGameUnsolvable, selectIsGameSolved } from "../../sudoku";
+import { useDispatch } from "react-redux";
+
+import { createNewGame, selectIsGameUnsolvable, selectIsGameSolved } from "../../sudoku";
 import { useTypedSelector } from "../../core";
 
 import styles from "./MessageDialog.css";
@@ -12,17 +14,19 @@ export const MessageDialog = () => {
     const showMessage = isUnsolvable || isGameSolved;
 
     const [isOpen, setIsOpen] = useState(showMessage);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setIsOpen(showMessage);
     }, [showMessage]);
 
     const title = isUnsolvable ? 
-        'This game is unsolvable!' : 
+        'Unsolvable game!' : 
         'Game solved! Good job!';
     const icon = isUnsolvable ? 'close' : 'checkmark box';
 
     const closeDialog = () => setIsOpen(false);
+    const startNewGame = () => dispatch(createNewGame());
 
     return (
         <Modal basic size='small' open={isOpen}>
@@ -33,6 +37,11 @@ export const MessageDialog = () => {
                 <Button color='green' inverted onClick={closeDialog}>
                     <Icon name='check' />OK
                 </Button>
+                {isGameSolved &&
+                    <Button color='green' inverted onClick={startNewGame}>
+                        <Icon name='pencil' />NEW GAME
+                    </Button>
+                }
             </Modal.Actions>
         </Modal>
     );
