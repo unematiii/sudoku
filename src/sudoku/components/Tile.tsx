@@ -62,7 +62,7 @@ export const Tile: React.FC<TileProps> = ({ column, row }) => {
         if (isActive && inputRef.current && inputRef.current !== document.activeElement) {
             inputRef.current.focus();
         }
-    }, [inputRef])
+    }, [inputRef]);
 
     return (
         <div className={cn} onClick={onClick}>

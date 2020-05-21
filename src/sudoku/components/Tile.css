@@ -95,7 +95,7 @@
     -webkit-text-fill-color: v-predefinedInputColor;
 }
 
-.tile:not(.active) input:hover,
+.tile:not(.active):not(.invalid) input:hover,
 .tile:not(.active):not(.invalid).highlighted input {
     background-color: v-inputHoverBgColor;
 }
