@@ -24,13 +24,21 @@ export const Tile: React.FC<TileProps> = ({ column, row }) => {
     const selectCellState = useMemo(() => makeCellStateSelector(column, row), []);
     const cellState = useTypedSelector(selectCellState);
 
-    const { isActive, isEditable, isHighlighted, isValid, value } = cellState;
+    const { 
+        isActive,
+        isEditable,
+        isHighlighted,
+        isValid,
+        isValueHighlighted,
+        value
+    } = cellState;
 
     const cn = classNames(styles.tile, {
         [styles.active]: isActive,
         [styles.highlighted]: isHighlighted,
         [styles.invalid]: !isValid,
         [styles.predefined]: !isEditable,
+        [styles.valueHighlighted]: isValueHighlighted,
     });
 
     const props = {
@@ -46,7 +54,7 @@ export const Tile: React.FC<TileProps> = ({ column, row }) => {
 
     const onFocus = () => dispatch(setActiveCell(column, row));
     const onBlur = () => dispatch(clearActiveCell());
-    
+
     return (
         <div className={cn} onClick={onClick}>
             <input

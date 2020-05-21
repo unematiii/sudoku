@@ -5,6 +5,7 @@ export interface BoardCell {
     isEditable: boolean;
     isHighlighted: boolean;
     isValid: boolean;
+    isValueHighlighted: boolean;
     value: number;
 }
 

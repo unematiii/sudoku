@@ -1,10 +1,11 @@
 @value v-boxBorder: 3px;
 @value v-activeInputBgColor: #c1d3e3;
+@value v-inputColor: #2a2c2e;
 @value v-inputHoverBgColor: #e1ecf5;
 @value v-invalidInputColor: #e63946;
-@value v-invalidInputBgColor: #f5bdbc; 
+@value v-invalidInputBgColor: #f5bdbc;
 @value v-predefinedInputColor: #457b9d;
-@value v-InputColor: #2a2c2e;
+@value v-valueHighlightedInputBgColor: #b5e7ff;
 
 .tile {
     display: flex;
@@ -60,8 +61,8 @@
 }
 
 .tile input {
-    color: v-InputColor;
-    -webkit-text-fill-color: v-InputColor;
+    color: v-inputColor;
+    -webkit-text-fill-color: v-inputColor;
     opacity: 1
 }
 
@@ -97,4 +98,8 @@
 .tile:not(.active) input:hover,
 .tile:not(.active):not(.invalid).highlighted input {
     background-color: v-inputHoverBgColor;
+}
+
+.tile:not(.active).valueHighlighted {
+    background-color: v-valueHighlightedInputBgColor;
 }

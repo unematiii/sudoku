@@ -190,11 +190,21 @@ export const selectIsCellHighlighted = (column: number, row: number) => (state: 
     return activeCell !== null && shouldHighlightCell(activeCell[0], activeCell[1], column, row);
 }
 
+export const selectIsValueHighlighted = (column: number, row: number) => (state: RootState): boolean => {
+    const activeCell = selectActiveCell(state);
+    if (!activeCell) {
+        return false;
+    }
+    const activeCellValue = selectCellValue(activeCell[0], activeCell[1])(state);
+    return activeCellValue > 0 && selectCellValue(column, row)(state) === activeCellValue;
+}
+
 export const makeCellStateSelector = (column: number, row: number) =>
     createStructuredSelector<RootState, BoardCell>({
         isActive: selectIsActiveCell(column, row),
         isEditable: selectIsEditable(column, row),
         isHighlighted: selectIsCellHighlighted(column, row),
         isValid: selectIsValidCell(column, row),
+        isValueHighlighted: selectIsValueHighlighted(column, row),
         value: selectCellValue(column, row),
     });
