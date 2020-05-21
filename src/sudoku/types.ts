@@ -14,10 +14,10 @@ export interface BoardCell {
 }
 
 /**
- * [column, row, preValue]
+ * [[column, row, preValue] | [[column, row, preValue]]]
  */
 export type GameHistoryEntry = [number, number, number];
-export type GameHistory = GameHistoryEntry[]; 
+export type GameHistory = Array<GameHistoryEntry | Array<GameHistoryEntry>>; 
 
 export interface GameState {
     activeCell: null | ActiveCell;

@@ -1,10 +1,17 @@
 import { cloneDeep } from "lodash-es";
 import { createStructuredSelector } from "reselect";
 
-import { ActiveCell, BoardCell, GameBoard, GameState } from "../types";
+import {
+    ActiveCell,
+    BoardCell,
+    GameBoard,
+    GameState,
+    GameHistoryEntry,
+} from "../types";
 import {
     createGame,
     isCellValid,
+    isGameHistoryEntries,
     isGameSolved,
     isValidBoard,
     loadGame,
@@ -12,6 +19,7 @@ import {
     shouldHighlightCell,
     solveGame,
     updateBoard,
+    updateHistoryFromSolvedGame,
 } from "../utils";
 import { RootState } from "../../core";
 
@@ -155,12 +163,13 @@ export function gameReducer(state = initialState, action: GameAction): GameState
 
         case SOLVE_CURRENT_GAME: 
             {
-                const { board } = state;
+                const { board, history } = state;
                 const solution = solveGame(board);
 
                 return {
                     ...state,
                     board: solution || board,
+                    history: solution ? updateHistoryFromSolvedGame(board, solution, history) : history,
                     isAutoSolved: !!solution,
                     isSolvable: !!solution,
                 };
@@ -169,17 +178,25 @@ export function gameReducer(state = initialState, action: GameAction): GameState
         case UNDO_ACTION: 
             {
                 const { board, history } = state;
+                const entry = history.pop();
 
-                const cell = history.pop();
-                if (cell) {
-                    const [column, row, value] = cell;
-                    const newBoard = updateBoard(board, column, row, value);
-    
+                if (entry) {
+                    let entries: GameHistoryEntry[] = [];
+                    if(isGameHistoryEntries(entry)) {
+                        entries = entry; 
+                    } else {
+                        entries = [entry];
+                    }
+
+                    let newBoard = [...board];
+                    for(const [column, row, value] of entries) {
+                        newBoard = updateBoard(newBoard, column, row, value);
+                    }
+
                     return {
                         ...state,
                         board: newBoard,
                         history: [...history],
-                        isAutoSolved: false,
                         isSolvable: true,
                     };
                 }
@@ -189,7 +206,7 @@ export function gameReducer(state = initialState, action: GameAction): GameState
 
         case UNDO_ALL_ACTIONS: {
             {
-                const { originalBoard} = state;
+                const { originalBoard } = state;
                 return {
                     ...state,
                     board: cloneDeep(originalBoard),
@@ -236,7 +253,7 @@ const selectIsValidCell = (column: number, row: number) => (state: RootState): b
 export const selectIsValidBoard = (state: RootState): boolean =>
     isValidBoard(selectBoard(state));
 
-const selectIsGameAutoSolved = (state: RootState): boolean =>
+export const selectIsGameAutoSolved = (state: RootState): boolean =>
     selectGameState(state).isAutoSolved;
 
 export const selectIsGameUnsolvable = (state: RootState): boolean =>

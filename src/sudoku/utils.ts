@@ -10,7 +10,7 @@ import {
     boardStartIndex,
     localStorageKey,
 } from "./consts";
-import { GameBoard, GameState } from "./types";
+import { GameBoard, GameHistory, GameHistoryEntry, GameState } from "./types";
 
 const createBoard = () => createSudokuBoard(boardSize, boardRetainPercentage);
 
@@ -48,6 +48,10 @@ export const isValidBoard = (board: GameBoard) =>
 export const isCellValid = (board: GameBoard,  column: number, row: number) => 
     isValid(board, row, column, boardSize, boxSize);
 
+export function isGameHistoryEntries(entry: GameHistoryEntry | GameHistoryEntry[]) : entry is GameHistoryEntry[] {
+    return Array.isArray(entry) && entry.length > 0 && Array.isArray(entry[0]);
+}
+
 export const updateBoard = (board: GameBoard, column: number, row: number, value: number): GameBoard => {
     const newRow = [
         ...board[row].slice(0, column),
@@ -83,6 +87,20 @@ export const sanitizeInput = (input: string) => {
     const value = Number(input);
     return Number.isInteger(value) && value >= 1 && value <= 9 ? value : 0;
 }
+
+export const updateHistoryFromSolvedGame = 
+    (board: GameBoard, solvedGame: GameBoard, history: GameHistory): GameHistory  => {
+        const entry: GameHistoryEntry[] = [];
+        for(let i = boardStartIndex; i < boardSize; i++) {
+            for(let j = boardStartIndex; j < boardSize; j++) {
+                if(board[i][j] !== solvedGame[i][j]) {
+                    entry.push([j, i, board[i][j]]);
+                }
+            }
+        }
+
+        return [...history, entry];
+    }
 
 export const loadGame = () => {
     const state = window.localStorage.getItem(localStorageKey);
