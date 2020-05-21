@@ -96,9 +96,7 @@ interface UndoAction {
 }
 
 export function undoAction(): UndoAction {
-    return {
-        type: UNDO_ACTION,
-    };
+    return { type: UNDO_ACTION };
 }
 
 interface UndoAllAction {
@@ -106,9 +104,7 @@ interface UndoAllAction {
 }
 
 export function undoAllActions(): UndoAllAction {
-    return {
-        type: UNDO_ALL_ACTIONS,
-    };
+    return { type: UNDO_ALL_ACTIONS };
 }
 
 

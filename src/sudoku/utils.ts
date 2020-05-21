@@ -14,7 +14,7 @@ import { GameBoard, GameHistory, GameHistoryEntry, GameState } from "./types";
 
 const createBoard = () => createSudokuBoard(boardSize, boardRetainPercentage);
 
-export const createGame: () => GameState =  () => {
+export const createGame: () => GameState = () => {
     const board = createBoard();
     return {
         activeCell: null,
@@ -79,7 +79,7 @@ export const shouldHighlightCell = (
     
     return cellColumn === activeCellcolumn ||
         cellRow === activeCellrow ||
-        ( cellColumn >= subsectionColumnStart&& cellColumn < subsectionColumnEnd  && 
+        (cellColumn >= subsectionColumnStart&& cellColumn < subsectionColumnEnd  && 
             cellRow >= subsectionRowStart && cellRow < subsectionRowEnd);
 }
 
