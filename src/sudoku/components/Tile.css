@@ -1,10 +1,10 @@
 @value v-boxBorder: 3px;
 @value v-activeInputBgColor: #c1d3e3;
-@value v-inputColor: #2a2c2e;
+@value v-inputColor: #457b9d;
 @value v-inputHoverBgColor: #e1ecf5;
 @value v-invalidInputColor: #e63946;
 @value v-invalidInputBgColor: #f5bdbc;
-@value v-predefinedInputColor: #457b9d;
+@value v-predefinedInputColor: #2a2c2e;
 @value v-valueHighlightedInputBgColor: #b5e7ff;
 
 .tile {
@@ -106,4 +106,9 @@
 
 .tile:not(.active).valueHighlighted.invalid input {
     font-weight: bold;
+}
+
+.tile:not(.active):not(.tile.predefined).valueHighlighted.invalid input {
+    color: v-invalidInputColor;
+   -webkit-text-fill-color: v-invalidInputColor;
 }
