@@ -4,9 +4,10 @@ import { MenuBar } from "./MenuBar";
 import { MessageDialog } from "./MessageDialog"
 import { Sudoku } from "../../sudoku";
 
-export const Home = () => 
+export const Home = () => (
     <>
         <MenuBar />
         <Sudoku />
         <MessageDialog />
-    </>;
+    </>
+);
