@@ -80,12 +80,14 @@ export function solveCurrentGame(): SolveCurrentGameAction {
 
 interface GameState extends BoardState {
     activeCell: null | ActiveCell;
+    isAutoSolved: boolean,
     isSolvable: boolean;
 }
 
 const initialBoard = loadGame() || createGame();
 const initialState: GameState = {
     activeCell: null,
+    isAutoSolved: false,
     isSolvable: true,
     ...initialBoard,
 };
@@ -133,6 +135,7 @@ export function gameReducer(state = initialState, action: GameAction): GameState
                 return {
                     ...state,
                     board: newBoard,
+                    isAutoSolved: false,
                     isSolvable: true,
                 };
             }
@@ -144,6 +147,7 @@ export function gameReducer(state = initialState, action: GameAction): GameState
                 return {
                     ...state,
                     board: solution || board,
+                    isAutoSolved: !!solution,
                     isSolvable: !!solution,
                 };
             }
@@ -183,11 +187,14 @@ const selectIsValidCell = (column: number, row: number) => (state: RootState): b
 export const selectIsValidBoard = (state: RootState): boolean =>
     isValidBoard(selectBoard(state));
 
+const selectIsGameAutoSolved = (state: RootState): boolean =>
+    selectGameState(state).isAutoSolved;
+
 export const selectIsGameUnsolvable = (state: RootState): boolean =>
     !selectGameState(state).isSolvable;
 
 export const selectIsGameSolved = (state: RootState): boolean =>
-    isGameSolved(selectBoard(state));
+    isGameSolved(selectBoard(state)) && !selectIsGameAutoSolved(state);
 
 export const selectIsCellHighlighted = (column: number, row: number) => (state: RootState): boolean => {
     const activeCell = selectActiveCell(state);
