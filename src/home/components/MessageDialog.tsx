@@ -29,7 +29,7 @@ export const MessageDialog = () => {
     const startNewGame = () => dispatch(createNewGame());
 
     return (
-        <Modal basic size='small' open={isOpen}>
+        <Modal basic size='small' open={isOpen} dimmer='blurring'>
             <Header textAlign='center' as='h2'>
                 <Icon name={icon} />{title}
             </Header>
