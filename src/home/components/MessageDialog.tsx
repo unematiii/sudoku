@@ -38,7 +38,7 @@ export const MessageDialog = () => {
                     <Icon name='check' />OK
                 </Button>
                 {isGameSolved &&
-                    <Button color='green' inverted onClick={startNewGame}>
+                    <Button color='blue' inverted onClick={startNewGame}>
                         <Icon name='pencil' />NEW GAME
                     </Button>
                 }
