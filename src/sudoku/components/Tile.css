@@ -5,7 +5,7 @@
 @value v-invalidInputColor: #e63946;
 @value v-invalidInputBgColor: #f5bdbc;
 @value v-predefinedInputColor: #2a2c2e;
-@value v-valueHighlightedInputBgColor: #b5e7ff;
+@value v-valueHighlightedInputBgColor: #caffbf;
 
 .tile {
     display: flex;
