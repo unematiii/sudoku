@@ -155,7 +155,9 @@ export function gameReducer(state = initialState, action: GameAction): GameState
                 return {
                     ...state,
                     board: newBoard,
-                    history: [...history, [column, row, prevValue]],
+                    history: prevValue === value ? 
+                        history :
+                        [...history, [column, row, prevValue]],
                     isAutoSolved: false,
                     isSolvable: true,
                 };
