@@ -6,17 +6,16 @@ import {
     isCellValid,
     isValidBoard,
     loadGame,
-    saveGame,
     shouldHighlightCell,
     solveGame,
 } from "../utils";
 import { RootState } from "../../core";
 
-const CREATE_NEW_GAME = 'CREATE_NEW_GAME';
+export const CREATE_NEW_GAME = 'CREATE_NEW_GAME';
+export const SET_CELL_VALUE = 'SET_CELL_VALUE';
+export const SOLVE_CURRENT_GAME = 'SOLVE_CURRENT_GAME';
 const SET_ACTIVE_CELL = 'SET_ACTIVE_CELL';
 const CLEAR_ACTIVE_CELL = 'CLEAR_ACTIVE_CELL';
-const SET_CELL_VALUE = 'SET_CELL_VALUE';
-const SOLVE_CURRENT_GAME = 'SOLVE_CURRENT_GAME';
 
 interface CreateNewGameAction {
     type: typeof CREATE_NEW_GAME;
@@ -90,7 +89,7 @@ const initialState: GameState = {
     ...initialBoard,
 };
 
-type GameAction =
+export type GameAction =
     CreateNewGameAction |
     SetActiveCellAction |
     ClearActiveCellAction |
@@ -116,7 +115,7 @@ export function gameReducer(state = initialState, action: GameAction): GameState
             };
         case SET_CELL_VALUE:
             {
-                const { board, originalBoard } = state;
+                const { board } = state;
                 const { column, row, value } = action.payload;
 
                 const newRow = [
@@ -130,8 +129,6 @@ export function gameReducer(state = initialState, action: GameAction): GameState
                     ...board.slice(row + 1),
                 ];
 
-                saveGame({ board: newBoard, originalBoard });
-
                 return {
                     ...state,
                     board: newBoard,
@@ -140,12 +137,8 @@ export function gameReducer(state = initialState, action: GameAction): GameState
             }
         case SOLVE_CURRENT_GAME: 
             {
-                const { board, originalBoard } = state;
+                const { board } = state;
                 const solution = solveGame(board);
-                
-                if (solution) {
-                    saveGame({ board: solution, originalBoard });
-                }
 
                 return {
                     ...state,
@@ -160,10 +153,10 @@ export function gameReducer(state = initialState, action: GameAction): GameState
 
 const selectGameState = (state: RootState): GameState => state.game;
 
-const selectBoard = (state: RootState): GameBoard =>
+export const selectBoard = (state: RootState): GameBoard =>
     selectGameState(state).board;
 
-const selectOriginalBoard = (state: RootState): GameBoard =>
+export const selectOriginalBoard = (state: RootState): GameBoard =>
     selectGameState(state).originalBoard;
 
 const selectActiveCell = (state: RootState): ActiveCell | null =>

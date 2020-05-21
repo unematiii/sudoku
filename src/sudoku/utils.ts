@@ -14,7 +14,6 @@ export const createGame: () => BoardState = () => {
         board: cloneDeep(board),
         originalBoard: cloneDeep(board),
     };
-    saveGame(state);
     return state;
 }
 
