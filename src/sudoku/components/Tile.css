@@ -1,8 +1,10 @@
 @value v-boxBorder: 3px;
-@value v-activeInputColor: #bbdefb;
-@value v-inputHoverColor: #cadffa;
-@value v-invalidInputColor: red;
-@value v-predefinedInputColor: #ececec;
+@value v-activeInputBgColor: #c1d3e3;
+@value v-inputHoverBgColor: #e1ecf5;
+@value v-invalidInputColor: #e63946;
+@value v-invalidInputBgColor: #f5bdbc; 
+@value v-predefinedInputColor: #457b9d;
+@value v-InputColor: #2a2c2e;
 
 .tile {
     display: flex;
@@ -57,10 +59,9 @@
   -webkit-appearance: none;
 }
 
-.tile input,
-.tile input:disabled {
-    color: black;
-    -webkit-text-fill-color: black;
+.tile input {
+    color: v-InputColor;
+    -webkit-text-fill-color: v-InputColor;
     opacity: 1
 }
 
@@ -79,19 +80,21 @@
 }
 
 .tile.active input {
-    background-color: v-activeInputColor;
+    background-color: v-activeInputBgColor;
 }
 
 .tile.invalid input {
    color: v-invalidInputColor;
    -webkit-text-fill-color: v-invalidInputColor;
+   background-color: v-invalidInputBgColor;
 }
 
-.tile:not(.active).predefined input {
-    background-color: v-predefinedInputColor;
+.tile.predefined input {
+    color: v-predefinedInputColor;
+    -webkit-text-fill-color: v-predefinedInputColor;
 }
 
 .tile:not(.active) input:hover,
-.tile:not(.active).highlighted input {
-    background-color: v-inputHoverColor !important;
+.tile:not(.active):not(.invalid).highlighted input {
+    background-color: v-inputHoverBgColor;
 }
