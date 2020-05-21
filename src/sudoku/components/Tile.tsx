@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { createRef, useMemo, useLayoutEffect } from "react";
 import classNames from "classnames";
 import { useDispatch } from "react-redux";
 
@@ -21,6 +21,8 @@ interface TileProps {
 }
 
 export const Tile: React.FC<TileProps> = ({ column, row }) => {
+    const inputRef = createRef<HTMLInputElement>();
+
     const selectCellState = useMemo(() => makeCellStateSelector(column, row), []);
     const cellState = useTypedSelector(selectCellState);
 
@@ -55,6 +57,13 @@ export const Tile: React.FC<TileProps> = ({ column, row }) => {
     const onFocus = () => dispatch(setActiveCell(column, row));
     const onBlur = () => dispatch(clearActiveCell());
 
+    // Trigger input focus if state is restored from localStorage
+    useLayoutEffect(() => {
+        if (isActive && inputRef.current && inputRef.current !== document.activeElement) {
+            inputRef.current.focus();
+        }
+    }, [inputRef])
+
     return (
         <div className={cn} onClick={onClick}>
             <input
@@ -66,6 +75,7 @@ export const Tile: React.FC<TileProps> = ({ column, row }) => {
                 min={1}
                 max={9}
                 step={1}
+                ref={inputRef}
                 {...props} 
             />
         </div>

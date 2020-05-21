@@ -1,12 +1,13 @@
 import { createStructuredSelector } from "reselect";
 
-import { ActiveCell, BoardCell, BoardState, GameBoard } from "../types";
+import { ActiveCell, BoardCell, GameBoard, GameState } from "../types";
 import {
     createGame,
     isCellValid,
     isGameSolved,
     isValidBoard,
     loadGame,
+    saveGame,
     shouldHighlightCell,
     solveGame,
 } from "../utils";
@@ -78,18 +79,8 @@ export function solveCurrentGame(): SolveCurrentGameAction {
     };
 }
 
-interface GameState extends BoardState {
-    activeCell: null | ActiveCell;
-    isAutoSolved: boolean,
-    isSolvable: boolean;
-}
-
-const initialBoard = loadGame() || createGame();
 const initialState: GameState = {
-    activeCell: null,
-    isAutoSolved: false,
-    isSolvable: true,
-    ...initialBoard,
+    ... (loadGame() || saveGame(createGame()))
 };
 
 export type GameAction =
@@ -103,7 +94,6 @@ export function gameReducer(state = initialState, action: GameAction): GameState
     switch (action.type) {
         case CREATE_NEW_GAME:
             return {
-                ...initialState,
                 ...createGame(),
             };
         case SET_ACTIVE_CELL:
@@ -156,12 +146,12 @@ export function gameReducer(state = initialState, action: GameAction): GameState
     }
 }
 
-const selectGameState = (state: RootState): GameState => state.game;
+export const selectGameState = (state: RootState): GameState => state.game;
 
-export const selectBoard = (state: RootState): GameBoard =>
+const selectBoard = (state: RootState): GameBoard =>
     selectGameState(state).board;
 
-export const selectOriginalBoard = (state: RootState): GameBoard =>
+const selectOriginalBoard = (state: RootState): GameBoard =>
     selectGameState(state).originalBoard;
 
 const selectActiveCell = (state: RootState): ActiveCell | null =>

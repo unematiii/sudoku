@@ -9,8 +9,11 @@ export interface BoardCell {
     value: number;
 }
 
-export interface BoardState {
+export interface GameState {
+    activeCell: null | ActiveCell;
     board: GameBoard;
+    isAutoSolved: boolean,
+    isSolvable: boolean;
     originalBoard: GameBoard;
 }
 

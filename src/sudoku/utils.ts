@@ -10,17 +10,19 @@ import {
     boardStartIndex,
     localStorageKey,
 } from "./consts";
-import { BoardState, GameBoard } from "./types";
+import { GameBoard, GameState } from "./types";
 
 const createBoard = () => createSudokuBoard(boardSize, boardRetainPercentage);
 
-export const createGame: () => BoardState = () => {
+export const createGame = () => {
     const board = createBoard();
-    const state = {
+    return {
+        activeCell: null,
+        isAutoSolved: false,
+        isSolvable: true,
         board: cloneDeep(board),
         originalBoard: cloneDeep(board),
     };
-    return state;
 }
 
 export const solveGame = (board: GameBoard) => {
@@ -71,9 +73,12 @@ export const sanitizeInput = (input: string) => {
 export const loadGame = () => {
     const state = window.localStorage.getItem(localStorageKey);
     if (state) {
-        return JSON.parse(state) as BoardState;
+        return JSON.parse(state) as GameState;
     }
     return null;
 }
-export const saveGame = (state: BoardState) => 
+
+export const saveGame = (state: GameState) => {
     window.localStorage.setItem(localStorageKey, JSON.stringify(state));
+    return state;
+}
