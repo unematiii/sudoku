@@ -103,3 +103,7 @@
 .tile:not(.active).valueHighlighted {
     background-color: v-valueHighlightedInputBgColor;
 }
+
+.tile:not(.active).valueHighlighted.invalid input {
+    font-weight: bold;
+}

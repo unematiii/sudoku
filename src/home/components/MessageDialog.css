@@ -1,3 +1,8 @@
 .actions {
     text-align: center !important;
 }
+
+.actions,
+.header {
+    border: none !important;
+}

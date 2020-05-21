@@ -30,7 +30,7 @@ export const MessageDialog = () => {
 
     return (
         <Modal basic size='small' open={isOpen} dimmer='blurring'>
-            <Header textAlign='center' as='h2'>
+            <Header textAlign='center' as='h2' className={styles.header}>
                 <Icon name={icon} />{title}
             </Header>
             <Modal.Actions className={styles.actions}>
