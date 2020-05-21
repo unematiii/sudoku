@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import {
     createNewGame,
     selectCanUndo,
+    selectIsGameSolved,
+    selectIsGameAutoSolved,
     selectIsGameUnsolvable,
     solveCurrentGame,
     undoAction,
@@ -21,7 +23,9 @@ export const MenuBar = () => {
     const canUndo = useTypedSelector(selectCanUndo);
     const isBoardValid = useTypedSelector(selectIsValidBoard);
     const isGameUnsolvable = useTypedSelector(selectIsGameUnsolvable);
-    const canTryReSolve = isBoardValid && !isGameUnsolvable;
+    const isGameAutoSolved = useTypedSelector(selectIsGameAutoSolved);
+    const isGameSolved = useTypedSelector(selectIsGameSolved);
+    const canTryReSolve = isBoardValid && !isGameUnsolvable && !isGameAutoSolved && !isGameSolved;
 
     const onClickNewGame = () => dispatch(createNewGame());
     const onClickSolveGame = () => dispatch(solveCurrentGame());

@@ -195,6 +195,7 @@ export function gameReducer(state = initialState, action: GameAction): GameState
                         ...state,
                         board: newBoard,
                         history: [...history],
+                        isAutoSolved: false,
                         isSolvable: true,
                     };
                 }
