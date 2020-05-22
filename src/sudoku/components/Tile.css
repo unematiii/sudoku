@@ -80,6 +80,10 @@
     cursor: default;
 }
 
+.tile input:disabled {
+    pointer-events: none;
+}
+
 .tile.active input {
     background-color: v-activeInputBgColor;
 }

@@ -32,6 +32,8 @@ export function withDynamicFontSize<P>(Component: ComponentType<P>) {
             fontSize: `${fontSize}px`,
         };
 
-        return <Component ref={containerRef} style={style} {...props} />;
+        return (
+            <Component ref={containerRef} style={style} {...props} />
+        );
     }
 }

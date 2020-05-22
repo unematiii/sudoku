@@ -8,11 +8,11 @@ import {
     selectIsGameSolved,
     selectIsGameAutoSolved,
     selectIsGameUnsolvable,
+    selectIsValidBoard,
     solveCurrentGame,
     undoAction,
     undoAllActions,
 } from "../../sudoku";
-import { selectIsValidBoard } from "../../sudoku";
 import { useTypedSelector } from "../../core";
 
 import styles from "./MenuBar.css";
