@@ -1,5 +1,5 @@
 # Sudoku
-Web based Sudoku game
+Web based Sudoku game built with TypeScript, React & Redux
 
 ## Software requirements
 - node >= 10.0.0
