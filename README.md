@@ -1,5 +1,5 @@
 # Sudoku
-Web based Sudoku game built with TypeScript, React & Redux
+Web based Sudoku game built with TypeScript, React & Redux. [Live demo](https://adaptive.ee/sudoku/).
 
 ## Software requirements
 - node >= 10.0.0
@@ -16,5 +16,5 @@ Run the application
 yarn start
 ```
 
-Point your browser to `http://localhost:8080`
+Point your browser to [http://localhost:8080](http://localhost:8080)
 
