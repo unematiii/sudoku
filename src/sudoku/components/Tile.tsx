@@ -1,4 +1,4 @@
-import React, { createRef, useMemo, useLayoutEffect } from "react";
+import React, { createRef, useCallback, useMemo, useLayoutEffect } from "react";
 import classNames from "classnames";
 import { useDispatch } from "react-redux";
 
@@ -50,12 +50,12 @@ export const Tile: React.FC<TileProps> = ({ column, row }) => {
 
     const dispatch = useDispatch();
 
-    const onClick = () => dispatch(setActiveCell(column, row));
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-        dispatch(setCellValue(column, row, sanitizeInput(e.target.value.slice(-1))));
+    const onClick = useCallback(() => dispatch(setActiveCell(column, row)), []);
+    const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) =>
+        dispatch(setCellValue(column, row, sanitizeInput(e.target.value.slice(-1)))), []);
 
-    const onFocus = () => dispatch(setActiveCell(column, row));
-    const onBlur = () => dispatch(clearActiveCell());
+    const onFocus = useCallback(() => dispatch(setActiveCell(column, row)), []);
+    const onBlur = useCallback(() => dispatch(clearActiveCell()), []);
 
     // Trigger input focus if state is restored from localStorage
     useLayoutEffect(() => {

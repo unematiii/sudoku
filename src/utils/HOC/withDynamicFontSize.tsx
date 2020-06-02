@@ -1,4 +1,4 @@
-import React, { ComponentType, createRef, useLayoutEffect, useState } from "react";
+import React, { ComponentType, createRef, useCallback, useEffect, useState } from "react";
 
 const baseContainerWidth = 550;
 const baseFontSize = 32;
@@ -9,23 +9,25 @@ export function withDynamicFontSize<P>(Component: ComponentType<P>) {
         const [containerWidth, setContainerWidth] = useState(0);
         const containerRef = createRef<HTMLDivElement>();
 
-        const updateContainerWidth = () => {
+        const updateContainerWidth = useCallback(() => {
             if(containerRef.current) {
                 const box = containerRef.current.getBoundingClientRect();
                 setContainerWidth(Math.min(box.width, box.height));
             }
-        };
+        }, [containerRef]);
 
-        useLayoutEffect(() => {
+        useEffect(() => {
             updateContainerWidth();
+
+            window.addEventListener('resize', updateContainerWidth);
+            window.addEventListener('orientationchange', updateContainerWidth);
 
             return () => {
                 window.removeEventListener('resize', updateContainerWidth);
                 window.removeEventListener('orientationchange', updateContainerWidth);
             };
-        }, []);
-        window.addEventListener('resize', updateContainerWidth);
-        window.addEventListener('orientationchange', updateContainerWidth);
+        }, [updateContainerWidth]);
+       
 
         const fontSize = Math.max(containerWidth / baseContainerWidth * baseFontSize, minFontSize);
         const style = {
